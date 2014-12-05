@@ -9,7 +9,7 @@ public class NetworkClient {
             Socket client = new Socket(serverName, port);
             OutputStream outToServer = client.getOutputStream();
             DataOutputStream out = new DataOutputStream(outToServer);
-            out.writeUTF("Hello World");
+            out.writeUTF(message);
             client.close();
         } catch(Exception e) {
             e.printStackTrace();
