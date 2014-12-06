@@ -19,7 +19,7 @@ public class NetworkClient {
     public static void main(String[] args) {
         
         int port = Integer.parseInt(args[0]);
-        String localhost = "0.0.0.0";
+        String localhost = "104.236.19.180";
         String message = "hello world";
 
         NetworkClient.send(localhost, port, message);
