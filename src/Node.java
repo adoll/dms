@@ -12,7 +12,8 @@ public class Node {
        and chooses $n$ random servers to distribute the key shares to. */
     public File encryptAndSendKey(int m, int n, File input) {
         
-
+        // so that this compiles
+        return null;
     }
 
 }
