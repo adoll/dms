@@ -24,7 +24,6 @@ public class Node {
         // TODO(adoll):
         // 1. Get list of nodes from server.
         // 2. Send one share to each of n randomly chosen nodes.
-        if (!input.equals(decryptFromShares(output, shares))) System.err.println("wadasddas");
         return output;
     }
 
