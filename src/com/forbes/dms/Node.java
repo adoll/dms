@@ -1,3 +1,5 @@
+package com.forbes.dms;
+
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 
 import java.io.File;
