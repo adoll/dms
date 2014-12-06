@@ -26,7 +26,7 @@ public class CryptoUtils {
 
     private static final int KEY_SIZE = 256;
     private static final String ALGORITHM = "AES";
-    private static final String TRANSFORMATION = "AES";
+    private static final String TRANSFORMATION = "AES/CBC";
 
     /**
        Generates a random key for use in AES Encryption.
@@ -106,6 +106,8 @@ public class CryptoUtils {
 
     }
 
+
+    // We should maybe move this to a standalone file.
     public static byte[] bigIntegerToBytes(BigInteger x, int outputSize) {
         // Convert the BigInteger x to a byte-array
         // x must be non-negative
