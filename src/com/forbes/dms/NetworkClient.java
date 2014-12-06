@@ -24,8 +24,8 @@ public class NetworkClient {
 
     public static void main(String[] args) {
         
-        int port = Integer.parseInt(args[0]);
-        String localhost = "104.131.19.136";
+        int port = Integer.parseInt(args[1]);
+        String localhost = args[0];
         String message = "hello world";
 
         NetworkClient.send(localhost, port, message);
