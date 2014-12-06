@@ -17,6 +17,9 @@ public class NetworkServer extends Thread {
                 Socket server = serverSocket.accept();
                 DataInputStream in = new DataInputStream(server.getInputStream());
                 System.out.println(in.readUTF());
+
+                DataOutputStream out = new DataOutputStream(server.getOutputStream());
+                out.writeUTF("Goodbye");
                 server.close();
             } catch (Exception e) {
                 e.printStackTrace();
