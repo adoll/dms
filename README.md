@@ -4,7 +4,7 @@ dms
 Dead Man's Switch
 
 
-Compilation: javac -d bin -sourcepath src -cp "lib/*" src/com/forbes/dms/*.java
+Compilation: javac -d bin -sourcepath src -cp "lib/\*" src/com/forbes/dms/*.java
 
 Execution: java -cp bin:lib/secretshare-1.4.2.jar com.forbes.dms.Node sample.txt
 
