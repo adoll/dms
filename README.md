@@ -9,3 +9,5 @@ Compilation: javac -d bin -sourcepath src -cp lib/secretshare-1.4.2.jar src/com/
 Execution: java -cp bin:lib/secretshare-1.4.2.jar com.forbes.dms.Node sample.txt
 
 Where sample.txt is a file to be encrypted
+
+4tcztyo4nfpdx2ot.onion is our onion address
