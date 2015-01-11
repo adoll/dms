@@ -17,7 +17,7 @@ public class Node {
        the key. Contacts the server, obtains a list of participating nodes,
        and chooses n random servers to distribute the key shares to. */
     public File encryptAndSendKey(int m, int n, File input) throws Exception {
-        Key key = CryptoUtils.generateKey();
+        Key key = CryptoUtils.generateSymmetricKey();
         File output = new File(input.getPath() + "_encrypted");
         CryptoUtils.encrypt(key, input, output);
         List<ShareInfo> shares = CryptoUtils.splitKey(key, m, n);

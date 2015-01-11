@@ -31,7 +31,7 @@ public class CryptoUtils {
     /**
        Generates a random key for use in AES Encryption.
     */
-    public static Key generateKey() throws NoSuchAlgorithmException {
+    public static Key generateSymmetricKey() throws NoSuchAlgorithmException {
         // TODO(adoll): Check whether we need to set preference order for
         // our Random Generator/ possibly make keyGen a singleton.
         KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
@@ -105,8 +105,7 @@ public class CryptoUtils {
         return new SecretKeySpec(bigIntegerToBytes(secret, 32), ALGORITHM);
 
     }
-
-
+    
     // We should maybe move this to a standalone file.
     public static byte[] bigIntegerToBytes(BigInteger x, int outputSize) {
         // Convert the BigInteger x to a byte-array
