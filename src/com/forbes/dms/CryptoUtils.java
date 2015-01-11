@@ -13,6 +13,7 @@ import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.List;
 
 import javax.crypto.KeyGenerator;
@@ -21,12 +22,14 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.IvParameterSpec;
 
 public class CryptoUtils {
 
     private static final int KEY_SIZE = 256;
+    private static final int IV_SIZE = 16;
     private static final String ALGORITHM = "AES";
-    private static final String TRANSFORMATION = "AES/CBC";
+    private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
 
     /**
        Generates a random key for use in AES Encryption.
@@ -56,22 +59,34 @@ public class CryptoUtils {
         doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
     }
 
-    // TODO(adoll): check whether we need to specify cipher mode (aka this
-    // doesn't use ECB mode right -- lol it does, change this once everything
-    // works?
     private static void doCrypto(int cipherMode, Key key, File inputFile,
-                                 File outputFile) throws Exception {
+                                 File outputFile)
+        throws Exception {
         try {
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            cipher.init(cipherMode, key);
-
             FileInputStream inputStream = new FileInputStream(inputFile);
-            byte[] inputBytes = new byte[(int) inputFile.length()];
-            inputStream.read(inputBytes);
+            
+            byte[] inputBytes;
+            byte[] ivbytes = new byte[IV_SIZE];
+            if (cipherMode == Cipher.DECRYPT_MODE) {
+                inputBytes = new byte[(int) inputFile.length() - 16];
+                inputStream.read(ivbytes);
+                inputStream.read(inputBytes);
+            }
+            else {
+                new SecureRandom().nextBytes(ivbytes);
+                inputBytes = new byte[(int) inputFile.length()];
+                inputStream.read(inputBytes);
+            }
+            IvParameterSpec iv = new IvParameterSpec(ivbytes);
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            cipher.init(cipherMode, key, iv);
 
             byte[] outputBytes = cipher.doFinal(inputBytes);
 
             FileOutputStream outputStream = new FileOutputStream(outputFile);
+            if (cipherMode == Cipher.ENCRYPT_MODE) {
+                outputStream.write(iv.getIV());
+            }
             outputStream.write(outputBytes);
 
             inputStream.close();
@@ -91,7 +106,6 @@ public class CryptoUtils {
     public static List<ShareInfo> splitKey(Key k, int m, int n) {
         PublicInfo publicInfo = new PublicInfo(n, m, null, "");
         SecretShare secretShare = new SecretShare(publicInfo);
-        System.out.println(k.getEncoded().length);
         BigInteger secret = new BigInteger(1, k.getEncoded());
         SecretShare.SplitSecretOutput generated = secretShare.split(secret);
         return generated.getShareInfos();
@@ -101,7 +115,6 @@ public class CryptoUtils {
         PublicInfo publicInfo = shares.get(0).getPublicInfo();
         SecretShare secretShare = new SecretShare(publicInfo);
         BigInteger secret = secretShare.combine(shares).getSecret();
-        System.out.println(bigIntegerToBytes(secret, 32));
         return new SecretKeySpec(bigIntegerToBytes(secret, 32), ALGORITHM);
 
     }
