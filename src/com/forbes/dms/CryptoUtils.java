@@ -26,7 +26,7 @@ import javax.crypto.spec.IvParameterSpec;
 
 public class CryptoUtils {
 
-    private static final int KEY_SIZE = 256;
+    private static final int KEY_SIZE = 128;
     private static final int IV_SIZE = 16;
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
@@ -68,7 +68,7 @@ public class CryptoUtils {
             byte[] inputBytes;
             byte[] ivbytes = new byte[IV_SIZE];
             if (cipherMode == Cipher.DECRYPT_MODE) {
-                inputBytes = new byte[(int) inputFile.length() - 16];
+                inputBytes = new byte[(int) inputFile.length() - IV_SIZE];
                 inputStream.read(ivbytes);
                 inputStream.read(inputBytes);
             }
