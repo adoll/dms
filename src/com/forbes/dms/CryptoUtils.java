@@ -26,7 +26,7 @@ import javax.crypto.spec.IvParameterSpec;
 
 public class CryptoUtils {
 
-    private static final int KEY_SIZE = 256;
+    private static final int KEY_SIZE = 128;
     private static final int IV_SIZE = 16;
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
