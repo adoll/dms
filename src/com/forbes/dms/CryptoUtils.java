@@ -68,7 +68,7 @@ public class CryptoUtils {
             byte[] inputBytes;
             byte[] ivbytes = new byte[IV_SIZE];
             if (cipherMode == Cipher.DECRYPT_MODE) {
-                inputBytes = new byte[(int) inputFile.length() - 16];
+                inputBytes = new byte[(int) inputFile.length() - IV_SIZE];
                 inputStream.read(ivbytes);
                 inputStream.read(inputBytes);
             }
