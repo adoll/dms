@@ -46,9 +46,9 @@ def read_board():
             verifier = PKCS1_PSS.new(their_key)
             if verifier.verify(h, i["signature"].decode("base64")):
                 if mj["command"] == check_in_command:
-                    print "CHECKIN"
+                    print "CHECKIN "+" from "+str(mj["from"])+" at "+str(mj["timestamp"])
                 elif mj["command"] == add_command:
-                    print "ADD"
+                    print "ADD "+" from "+str(mj["from"])+" period "+str(mj["period"])+" share "+str(mj["share"])
             else:
                 print "FAIL"
 

@@ -124,7 +124,7 @@ def main():
 
         i = 0
         for s in safes:
-            add(s, shares[i], t)
+            add(s, t, shares[i])
             i += 1
 
     elif sys.argv[1] == "CHECKIN":
