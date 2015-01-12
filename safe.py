@@ -24,6 +24,9 @@ own_id = iden_h.hexdigest()[:10]
 
 directory = {}
 
+checkins = {}
+shares = {}
+
 def get_directory():
     r = requests.get(directory_server)
     j = json.loads(r.text)
@@ -46,10 +49,59 @@ def read_board():
             verifier = PKCS1_PSS.new(their_key)
             if verifier.verify(h, i["signature"].decode("base64")):
                 if mj["command"] == check_in_command:
-                    print "CHECKIN "+" from "+str(mj["from"])+" at "+str(mj["timestamp"])
+                    from_id = str(mj["from"])
+                    ts = mj["timestamp"]
+
+                    if from_id in checkins:
+                        lts = checkins[from_id]
+                        if ts > lts:
+                            checkins[from_id] = ts
+                    else:
+                        checkins[from_id] = ts
                 elif mj["command"] == add_command:
-                    print "ADD "+" from "+str(mj["from"])+" period "+str(mj["period"])+" share "+str(mj["share"])
+                    from_id = str(mj["from"])
+                    period = str(mj["period"])
+                    share = str(mj["share"])
+                    shares[from_id] = (share, period)
             else:
                 print "FAIL"
 
+def write_checkins():
+    with open("checkins", "w") as f:
+        for k,v in checkins.iteritems():
+            f.write(str(k) + " " + str(v) + "\n")
 
+def write_shares():
+    with open("shares", "w") as f:
+        for k,v in shares.iteritems():
+            f.write(str(k) + " " + str(v[0]) + " " +str(v[1]) +  "\n")
+
+def read_checkins():
+    with open("checkins", "r") as f:
+        for l in f.readlines():
+            c = l.split(" ")
+            checkins[c[0]] = float(c[1])
+
+def read_shares():
+    with open("shares", "r") as f:
+        for l in f.readlines():
+            c = l.split(" ")
+            shares[c[0]] = (c[1], int(c[2]))
+
+def main():
+
+    get_directory()
+    
+    try:
+        read_checkins()
+        read_shares()
+    except:
+        pass
+
+    read_board()
+
+    write_checkins()
+    write_shares()
+
+if __name__ == "__main__":
+    main()
