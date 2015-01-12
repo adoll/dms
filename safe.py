@@ -1,4 +1,5 @@
 import requests
+import tor_connection
 import sys
 import time
 import json
@@ -12,7 +13,7 @@ check_in_command = "CHECKIN"
 add_command = "ADD"
 
 directory_server = "http://127.0.0.1:5000"
-message_board = "http://127.0.0.1:5001"
+message_board = "4tcztyo4nfpdx2ot.onion"
 
 key = RSA.importKey(open('dms_key.pem').read())
 pubkey = key.publickey()
@@ -34,7 +35,7 @@ def get_directory():
         directory[i["id"]] = i["pubkey"]
 
 def read_board():
-    r = requests.get(message_board)
+    r = tor_connection.get(message_board)
     j = json.loads(r.text)
     for i in j:
         if (i["to"] == own_id):

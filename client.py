@@ -4,6 +4,7 @@ import time
 import json
 import random
 import runjava
+import tor_connection
 
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
@@ -14,7 +15,7 @@ check_in_command = "CHECKIN"
 add_command = "ADD"
 
 directory_server = "http://127.0.0.1:5000"
-message_board = "http://127.0.0.1:5001"
+message_board = "4tcztyo4nfpdx2ot.onion"
 
 key = RSA.importKey(open('dms_key.pem').read())
 pubkey = key.publickey()
@@ -46,7 +47,7 @@ def check_in(to):
     signature = signer.sign(h)
 
     payload = {"to": to, "message": ciphertext.encode("base64"), "signature": signature.encode("base64")}
-    r = requests.post(message_board, data=payload)
+    tor_connection.post(message_board, payload)
 
 def add(to, period, share):
 
@@ -65,7 +66,7 @@ def add(to, period, share):
     signature = signer.sign(h)
 
     payload = {"to": to, "message": ciphertext.encode("base64"), "signature": signature.encode("base64")}
-    r = requests.post(message_board, data=payload)
+    tor_connection.post(message_board, payload)
 
 def get_directory():
     r = requests.get(directory_server)
