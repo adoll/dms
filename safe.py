@@ -36,7 +36,7 @@ def get_directory():
 
 def read_board():
     r = tor_connection.get(message_board)
-    j = json.loads(r.text)
+    j = json.loads(r)
     for i in j:
         if (i["to"] == own_id):
             ciphertext = i["message"].decode("base64")
