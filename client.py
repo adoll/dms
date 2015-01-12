@@ -49,7 +49,7 @@ def check_in(to):
     r = requests.post(message_board, data=payload)
 
 def add(to, period, share):
-    
+
     to_key = RSA.importKey(directory[to])
     ts = time.time()
 
@@ -73,31 +73,67 @@ def get_directory():
     for i in j:
         directory[i["id"]] = i["pubkey"]
         id_list.append(i["id"])
-        print i["id"]
 
 def select_safes(n):
     N = len(id_list)
-
-    if (n > N):
-        print "n is too Large"
-        return
-
     safe_indices = random.sample(range(0, N), n)
     f = open("safes", "w")
 
     for i in safe_indices:
         f.write(id_list[i])
+        f.write("\n")
         safes.append(id_list[i])
 
 def read_safes():
     f = open("safes", "r")
 
-    for l in f.readline():
-        safes.append(l)
+    for l in f.readlines():
+        safes.append(l.strip())
 
-def get_shares():
-    command = "java -cp bin:lib/* com.forbes.dms.Node + 5 10 sample.txt"
-    r = run_java(command)
+def get_shares(m, n, f):
+    command = "java -cp bin:lib/* com.forbes.dms.Node + "+ str(m) +" "+ str(n) +" "+ f
+    r = runjava.run_java(command)
 
     for l in r:
         shares.append(l)
+
+def main():
+    if sys.argv[1] == "ACTIVATE":
+        try:
+            filename = sys.argv[2]
+            m = int(sys.argv[3])
+            n = int(sys.argv[4])
+            t = int(sys.argv[5])
+        except:
+            print "Usage: python client.py ACTIVATE filename m n period"
+            return
+
+        if (m > n):
+            print "m is greater than n"
+            return
+
+        get_shares(m, n, filename)
+        get_directory()
+
+        N = len(id_list)
+        if (n > N):
+            print "not enough nodes"
+            return
+
+        select_safes(n)
+
+        i = 0
+        for s in safes:
+            add(s, shares[i], t)
+            i += 1
+
+    elif sys.argv[1] == "CHECKIN":
+
+        get_directory()
+        read_safes()
+
+        for s in safes:
+            check_in(s)
+
+if __name__ == "__main__":
+    main()
