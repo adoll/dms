@@ -89,6 +89,21 @@ def read_shares():
             c = l.split(" ")
             shares[c[0]] = (c[1], int(c[2]))
 
+def evaluate_checkins():
+    for k,v in shares.iteritems():
+        iden = k
+        period = v[1]
+        share = v[0]
+
+        if iden in checkins:
+            last = checkins[iden]
+            now = time.time()
+
+            if (now - last > 2*period):
+                payload = {"share":share}
+                requests.post(directory_server, data=payload)
+
+
 def main():
 
     get_directory()
@@ -100,6 +115,8 @@ def main():
         pass
 
     read_board()
+
+    evaluate_checkins()
 
     write_checkins()
     write_shares()
