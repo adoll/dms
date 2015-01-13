@@ -10,6 +10,7 @@ import json
 app = Flask(__name__)
 
 keys = []
+shares = []
 
 def add_user(sig, pubkey_s):
     try:
@@ -40,6 +41,15 @@ def access_server():
                 request.form['pubkey'])
     else:
         return json.dumps(keys)
+
+@app.route('/shares', methods=["GET", "POST"])
+def post_shares():
+    if request.method == 'POST':
+        shares.append(request.form['share'])
+        return "Success"
+    else:
+        return json.dumps(shares)
+
 
 if __name__ == "__main__":
     app.debug = True

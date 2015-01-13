@@ -1,4 +1,5 @@
 import requests
+import tor_connection
 import sys
 import time
 import json
@@ -11,8 +12,8 @@ from Crypto.Signature import PKCS1_PSS
 check_in_command = "CHECKIN"
 add_command = "ADD"
 
-directory_server = "http://127.0.0.1:5000"
-message_board = "http://127.0.0.1:5001"
+directory_server = "http://130.211.173.154"
+message_board = "4tcztyo4nfpdx2ot.onion"
 
 key = RSA.importKey(open('dms_key.pem').read())
 pubkey = key.publickey()
@@ -34,8 +35,8 @@ def get_directory():
         directory[i["id"]] = i["pubkey"]
 
 def read_board():
-    r = requests.get(message_board)
-    j = json.loads(r.text)
+    r = tor_connection.get(message_board)
+    j = json.loads(r)
     for i in j:
         if (i["to"] == own_id):
             ciphertext = i["message"].decode("base64")
@@ -88,6 +89,21 @@ def read_shares():
             c = l.split(" ")
             shares[c[0]] = (c[1], int(c[2]))
 
+def evaluate_checkins():
+    for k,v in shares.iteritems():
+        iden = k
+        period = float(v[1])
+        share = v[0]
+
+        if iden in checkins:
+            last = checkins[iden]
+            now = time.time()
+
+            if (now - last > 2*period):
+                payload = {"share":share}
+                r = requests.post(directory_server+"/shares", data=payload)
+
+
 def main():
 
     get_directory()
@@ -99,6 +115,8 @@ def main():
         pass
 
     read_board()
+
+    evaluate_checkins()
 
     write_checkins()
     write_shares()

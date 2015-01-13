@@ -31,7 +31,6 @@ iden_h.update(pubkey_s)
 iden = iden_h.hexdigest()[:10]
 
 payload = {'pubkey': pubkey_s, 'signature': s}
-r = requests.post("http://127.0.0.1:5000", data=payload)
-print(r.text)
+r = requests.post("http://130.211.173.154", data=payload)
 
 print "Your id is " + iden
