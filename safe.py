@@ -92,7 +92,7 @@ def read_shares():
 def evaluate_checkins():
     for k,v in shares.iteritems():
         iden = k
-        period = v[1]
+        period = float(v[1])
         share = v[0]
 
         if iden in checkins:
@@ -101,7 +101,7 @@ def evaluate_checkins():
 
             if (now - last > 2*period):
                 payload = {"share":share}
-                requests.post(directory_server, data=payload)
+                r = requests.post(directory_server+"/shares", data=payload)
 
 
 def main():
