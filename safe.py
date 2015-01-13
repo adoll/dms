@@ -12,7 +12,7 @@ from Crypto.Signature import PKCS1_PSS
 check_in_command = "CHECKIN"
 add_command = "ADD"
 
-directory_server = "http://127.0.0.1:5000"
+directory_server = "http://130.211.173.154"
 message_board = "4tcztyo4nfpdx2ot.onion"
 
 key = RSA.importKey(open('dms_key.pem').read())
